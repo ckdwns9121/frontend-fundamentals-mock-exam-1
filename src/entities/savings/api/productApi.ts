@@ -1,4 +1,4 @@
-import { baseHttp } from '../../../shared/http';
+import { baseHttp } from 'shared/http';
 import type { SavingsProduct } from '../model/types';
 
 /**

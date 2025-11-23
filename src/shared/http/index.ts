@@ -1,5 +1,7 @@
 import { http as tosslibHttp } from 'tosslib';
 
+const BASE_URL = 'http://localhost:5173';
+
 /**
  * HTTP 클라이언트 인터페이스
  * @description HTTP 요청을 수행하는 클라이언트의 추상화 인터페이스입니다.
@@ -77,4 +79,5 @@ export class BaseHttp implements HttpClient {
   }
 }
 
-export const baseHttp = new BaseHttp('http://localhost:5173');
+// BaseHttp 싱글톤 인스턴스 생성
+export const baseHttp = new BaseHttp(BASE_URL);

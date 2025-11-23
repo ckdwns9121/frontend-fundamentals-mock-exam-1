@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import { Border, NavigationBar, Spacing } from 'tosslib';
-import { SavingsForm } from '../features/savings/ui/SavingsForm';
-import { SavingsProductList } from '../features/savings/ui/SavingsProductList';
-import { CalculationResult } from '../features/savings/ui/CalculationResult';
-import { filterProductsByConditions } from '../features/savings/lib/filters';
-import { getRecommendedProducts } from '../features/savings/lib/recommendations';
-import { findProductById } from '../features/savings/lib/products';
-import { useSavingsProducts } from '../entities/savings/api';
-import { Tab } from '../shared/ui/Tab';
+import { SavingsForm } from 'features/savings/ui/SavingsForm';
+import { SavingsProductList } from 'features/savings/ui/SavingsProductList';
+import { CalculationResult } from 'features/savings/ui/CalculationResult';
+import { filterProductsByConditions } from 'features/savings/lib/filters';
+import { getRecommendedProducts } from 'features/savings/lib/recommendations';
+import { findProductById } from 'features/savings/lib/products';
+import { useSavingsProducts } from 'entities/savings/api';
+import { Tab } from 'shared/ui/Tab';
 
 interface Tab {
   id: string;
@@ -43,6 +43,9 @@ export function SavingsCalculatorPage() {
     return getRecommendedProducts(filteredProducts, 2);
   }, [filteredProducts]);
 
+  /**
+   * 탭 목록
+   */
   const tabs: Tab[] = [
     {
       id: 'products',
@@ -86,7 +89,7 @@ export function SavingsCalculatorPage() {
         onMonthlyAmountChange={setMonthlyAmount}
         onPeriodChange={setPeriod}
       />
-      <Spacing size={24} />
+      <Spacing size={8} />
       <Border height={16} />
       <Spacing size={8} />
 
