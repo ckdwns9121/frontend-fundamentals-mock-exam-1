@@ -1,5 +1,5 @@
 import { Border, colors, ListHeader, ListRow, Spacing } from 'tosslib';
-import { SavingsProductItem } from 'entities/savings/ui/SavingsProductItem';
+import { SavingsProductItem } from 'entities/savings/ui/SavingsProductItem/SavingProductItem';
 import type { SavingsProduct } from 'entities/savings/model/types';
 import { formatAmount } from 'shared/lib/format';
 import { calculateDifference, calculateExpectedAmount, calculateRecommendedMonthlyAmount } from '../lib/calculations';

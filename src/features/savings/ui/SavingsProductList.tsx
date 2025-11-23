@@ -1,5 +1,5 @@
 import { ListRow } from 'tosslib';
-import { SavingsProductItem } from 'entities/savings/ui/SavingsProductItem';
+import { SavingsProductItem } from 'entities/savings/ui/SavingsProductItem/SavingProductItem';
 import type { SavingsProduct } from 'entities/savings/model/types';
 
 interface SavingsProductListProps {
