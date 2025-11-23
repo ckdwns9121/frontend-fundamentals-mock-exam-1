@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, Children, isValidElement } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { colors } from 'tosslib';
 
@@ -12,7 +12,7 @@ const TabContext = createContext<TabContextValue | null>(null);
 function useTabContext() {
   const context = useContext(TabContext);
   if (!context) {
-    throw new Error('Tab 컴포넌트는 Tab.Label과 Tab.Panel을 포함해야 합니다.');
+    throw new Error('Tab 컴포넌트는 Tab.List와 Tab.Content를 포함해야 합니다.');
   }
   return context;
 }
@@ -30,10 +30,14 @@ interface TabProps {
  * @example
  * ```tsx
  * <Tab defaultValue="tab1">
- *   <Tab.Label value="tab1">탭 1</Tab.Label>
- *   <Tab.Label value="tab2">탭 2</Tab.Label>
- *   <Tab.Panel value="tab1">탭 1 내용</Tab.Panel>
- *   <Tab.Panel value="tab2">탭 2 내용</Tab.Panel>
+ *   <Tab.List>
+ *     <Tab.Trigger value="tab1">탭 1</Tab.Trigger>
+ *     <Tab.Trigger value="tab2">탭 2</Tab.Trigger>
+ *   </Tab.List>
+ *   <Tab.Content>
+ *     <Tab.Panel value="tab1">탭 1 내용</Tab.Panel>
+ *     <Tab.Panel value="tab2">탭 2 내용</Tab.Panel>
+ *   </Tab.Content>
  * </Tab>
  * ```
  */
@@ -50,20 +54,6 @@ export function Tab({ children, defaultValue, value: controlledValue, onChange: 
     controlledOnChange?.(newValue);
   };
 
-  // children을 분석해서 Tab.Label과 Tab.Panel을 분리
-  const labels: ReactNode[] = [];
-  const panels: ReactNode[] = [];
-
-  Children.forEach(children, child => {
-    if (isValidElement(child)) {
-      if (child.type === TabLabel) {
-        labels.push(child);
-      } else if (child.type === TabPanel) {
-        panels.push(child);
-      }
-    }
-  });
-
   return (
     <TabContext.Provider value={{ activeValue, onChange: handleChange }}>
       <div
@@ -71,31 +61,44 @@ export function Tab({ children, defaultValue, value: controlledValue, onChange: 
           width: 100%;
         `}
       >
-        <div
-          css={css`
-            display: flex;
-            border-bottom: 1px solid ${colors.grey200};
-          `}
-        >
-          {labels}
-        </div>
-        {panels}
+        {children}
       </div>
     </TabContext.Provider>
   );
 }
 
-interface TabLabelProps {
+interface TabListProps {
+  children: ReactNode;
+}
+
+/**
+ * Tab.List 컴포넌트
+ * @description 탭 트리거 목록을 감싸는 컨테이너입니다.
+ */
+function TabList({ children }: TabListProps) {
+  return (
+    <div
+      css={css`
+        display: flex;
+        border-bottom: 1px solid ${colors.grey200};
+      `}
+    >
+      {children}
+    </div>
+  );
+}
+
+interface TabTriggerProps {
   children: ReactNode;
   value: string;
   disabled?: boolean;
 }
 
 /**
- * Tab.Label 컴포넌트
- * @description 탭 라벨/버튼 컴포넌트입니다.
+ * Tab.Trigger 컴포넌트
+ * @description 탭 트리거/버튼 컴포넌트입니다.
  */
-function TabLabel({ children, value, disabled = false }: TabLabelProps) {
+function TabTrigger({ children, value, disabled = false }: TabTriggerProps) {
   const { activeValue, onChange } = useTabContext();
   const isActive = activeValue === value;
 
@@ -131,6 +134,26 @@ function TabLabel({ children, value, disabled = false }: TabLabelProps) {
   );
 }
 
+interface TabContentProps {
+  children: ReactNode;
+}
+
+/**
+ * Tab.Content 컴포넌트
+ * @description 탭 패널들을 감싸는 컨테이너입니다.
+ */
+function TabContent({ children }: TabContentProps) {
+  return (
+    <div
+      css={css`
+        width: 100%;
+      `}
+    >
+      {children}
+    </div>
+  );
+}
+
 interface TabPanelProps {
   children: ReactNode;
   value: string;
@@ -161,5 +184,10 @@ function TabPanel({ children, value }: TabPanelProps) {
 }
 
 // Compound Component 패턴 적용
-Tab.Label = TabLabel;
+Tab.List = TabList;
+Tab.Trigger = TabTrigger;
+Tab.Content = TabContent;
 Tab.Panel = TabPanel;
+
+// 하위 호환성을 위한 별칭 (deprecated)
+Tab.Label = TabTrigger;

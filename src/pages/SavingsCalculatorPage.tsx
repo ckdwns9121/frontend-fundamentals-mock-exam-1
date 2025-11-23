@@ -15,7 +15,6 @@ export function SavingsCalculatorPage() {
   const [monthlyAmount, setMonthlyAmount] = useState('');
   const [period, setPeriod] = useState<number>(12);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
 
   /**
    * 입력 조건에 맞는 상품 목록 필터링
@@ -38,6 +37,42 @@ export function SavingsCalculatorPage() {
     return getRecommendedProducts(filteredProducts, 2);
   }, [filteredProducts]);
 
+  const tabs = [
+    {
+      id: 'products',
+      label: '적금 상품',
+      component: (
+        <SavingsProductList
+          isLoading={isLoading}
+          isError={isError}
+          products={filteredProducts}
+          selectedProductId={selectedProductId}
+          onProductSelect={setSelectedProductId}
+        />
+      ),
+    },
+    {
+      id: 'results',
+      label: '계산 결과',
+      component: (
+        <CalculationResult
+          targetAmount={targetAmount}
+          monthlyAmount={monthlyAmount}
+          period={period}
+          selectedProduct={selectedProduct}
+          recommendedProducts={recommendedProducts}
+          selectedProductId={selectedProductId}
+          onProductSelect={setSelectedProductId}
+        />
+      ),
+    },
+    {
+      id: 'form',
+      label: '입력 조건',
+      component: <div>hello</div>,
+    },
+  ] as const;
+
   return (
     <>
       <NavigationBar title="적금 계산기" />
@@ -57,31 +92,21 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab value={activeTab} onChange={value => setActiveTab(value as 'products' | 'results')}>
-        <Tab.Label value="products">적금 상품</Tab.Label>
-        <Tab.Label value="results">계산 결과</Tab.Label>
-
-        <Tab.Panel value="products">
-          <SavingsProductList
-            isLoading={isLoading}
-            isError={isError}
-            products={filteredProducts}
-            selectedProductId={selectedProductId}
-            onProductSelect={setSelectedProductId}
-          />
-        </Tab.Panel>
-
-        <Tab.Panel value="results">
-          <CalculationResult
-            targetAmount={targetAmount}
-            monthlyAmount={monthlyAmount}
-            period={period}
-            selectedProduct={selectedProduct}
-            recommendedProducts={recommendedProducts}
-            selectedProductId={selectedProductId}
-            onProductSelect={setSelectedProductId}
-          />
-        </Tab.Panel>
+      <Tab defaultValue={tabs[0].id}>
+        <Tab.List>
+          {tabs.map(tab => (
+            <Tab.Trigger key={tab.id} value={tab.id}>
+              {tab.label}
+            </Tab.Trigger>
+          ))}
+        </Tab.List>
+        <Tab.Content>
+          {tabs.map(tab => (
+            <Tab.Panel key={tab.id} value={tab.id}>
+              {tab.component}
+            </Tab.Panel>
+          ))}
+        </Tab.Content>
       </Tab>
     </>
   );
