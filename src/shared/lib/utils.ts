@@ -12,13 +12,10 @@ export interface Identifiable {
  * @returns 찾은 엔티티 또는 null
  * @example
  * ```ts
- * const product = findById(products, productId);
- * const user = findById(users, userId);
+ * const product = findById<Product>(products, productId);
+ * const user = findById<User>(users, userId);
  * ```
  */
-export function findById<T extends Identifiable>(items: T[], id: string | null): T | null {
-  if (!id) {
-    return null;
-  }
-  return items.find(item => item.id === id) || null;
+export function findById<T extends Identifiable>(items: T[], id: string | null): T | undefined {
+  return items.find(item => item.id === id);
 }

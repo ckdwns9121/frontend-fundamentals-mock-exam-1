@@ -9,6 +9,12 @@ import { findProductById } from '../features/savings/lib/products';
 import { useSavingsProducts } from '../entities/savings/api';
 import { Tab } from '../shared/ui/Tab';
 
+interface Tab {
+  id: string;
+  label: string;
+  component: React.ReactNode;
+}
+
 export function SavingsCalculatorPage() {
   const { data: products = [], isLoading, isError } = useSavingsProducts();
   const [targetAmount, setTargetAmount] = useState('');
@@ -37,7 +43,7 @@ export function SavingsCalculatorPage() {
     return getRecommendedProducts(filteredProducts, 2);
   }, [filteredProducts]);
 
-  const tabs = [
+  const tabs: Tab[] = [
     {
       id: 'products',
       label: '적금 상품',
@@ -66,19 +72,12 @@ export function SavingsCalculatorPage() {
         />
       ),
     },
-    {
-      id: 'form',
-      label: '입력 조건',
-      component: <div>hello</div>,
-    },
-  ] as const;
+  ];
 
   return (
     <>
       <NavigationBar title="적금 계산기" />
-
       <Spacing size={16} />
-
       <SavingsForm
         targetAmount={targetAmount}
         monthlyAmount={monthlyAmount}
@@ -87,12 +86,11 @@ export function SavingsCalculatorPage() {
         onMonthlyAmountChange={setMonthlyAmount}
         onPeriodChange={setPeriod}
       />
-
       <Spacing size={24} />
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab defaultValue={tabs[0].id}>
+      <Tab defaultValue={tabs[0]?.id}>
         <Tab.List>
           {tabs.map(tab => (
             <Tab.Trigger key={tab.id} value={tab.id}>

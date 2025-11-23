@@ -8,5 +8,5 @@ import type { SavingsProduct } from 'entities/savings/model/types';
  * @returns 찾은 상품 또는 null
  */
 export function findProductById(products: SavingsProduct[], productId: string | null): SavingsProduct | null {
-  return findById<SavingsProduct>(products, productId);
+  return findById<SavingsProduct>(products, productId) ?? null;
 }

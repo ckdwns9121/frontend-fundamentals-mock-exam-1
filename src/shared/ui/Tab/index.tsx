@@ -188,6 +188,3 @@ Tab.List = TabList;
 Tab.Trigger = TabTrigger;
 Tab.Content = TabContent;
 Tab.Panel = TabPanel;
-
-// 하위 호환성을 위한 별칭 (deprecated)
-Tab.Label = TabTrigger;
