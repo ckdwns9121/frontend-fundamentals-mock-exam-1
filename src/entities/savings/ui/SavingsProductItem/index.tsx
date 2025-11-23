@@ -1,22 +1,11 @@
 import { Assets, colors, ListRow } from 'tosslib';
+import { formatAmount } from 'shared/lib/format';
 import type { SavingsProduct } from '../../model/types';
 
 interface SavingsProductItemProps {
   product: SavingsProduct;
   selected?: boolean;
   onClick?: () => void;
-}
-
-/**
- * 금액을 포맷팅합니다.
- * @param amount 금액
- * @returns 포맷팅된 금액 문자열
- */
-function formatAmount(amount: number | undefined | null): string {
-  if (amount == null || isNaN(amount)) {
-    return '0';
-  }
-  return amount.toLocaleString('ko-KR');
 }
 
 /**
