@@ -1,6 +1,6 @@
 import { Border, colors, ListHeader, ListRow, NavigationBar, Spacing, Tab } from 'tosslib';
 import { SavingsProductItem } from '../entities/savings/ui/SavingsProductItem';
-import { SavingsForm } from '../features/savings/savings-form';
+import { SavingsForm } from '../features/savings/SavingsForm';
 import { useSavingsProducts } from '../entities/savings/api';
 
 export function SavingsCalculatorPage() {
