@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Border, ListRow, NavigationBar, Spacing, Tab } from 'tosslib';
-import { SavingsProductItem } from '../entities/savings/ui/SavingsProductItem';
+import { Border, NavigationBar, Spacing } from 'tosslib';
+import { Tab } from '../shared/ui/Tab';
 import { SavingsForm } from '../features/savings/ui/SavingsForm';
+import { SavingsProductList } from '../features/savings/ui/SavingsProductList';
 import { CalculationResult } from '../features/savings/ui/CalculationResult';
 import { useSavingsProducts } from '../entities/savings/api';
 import type { SavingsProduct } from '../entities/savings/model/types';
@@ -76,48 +77,32 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab onChange={value => setActiveTab(value as 'products' | 'results')}>
-        <Tab.Item value="products" selected={activeTab === 'products'}>
-          적금 상품
-        </Tab.Item>
-        <Tab.Item value="results" selected={activeTab === 'results'}>
-          계산 결과
-        </Tab.Item>
+      <Tab value={activeTab} onChange={value => setActiveTab(value as 'products' | 'results')}>
+        <Tab.Label value="products">적금 상품</Tab.Label>
+        <Tab.Label value="results">계산 결과</Tab.Label>
+
+        <Tab.Panel value="products">
+          <SavingsProductList
+            isLoading={isLoading}
+            isError={isError}
+            products={filteredProducts}
+            selectedProductId={selectedProductId}
+            onProductSelect={setSelectedProductId}
+          />
+        </Tab.Panel>
+
+        <Tab.Panel value="results">
+          <CalculationResult
+            targetAmount={targetAmount}
+            monthlyAmount={monthlyAmount}
+            period={period}
+            selectedProduct={selectedProduct}
+            recommendedProducts={recommendedProducts}
+            selectedProductId={selectedProductId}
+            onProductSelect={setSelectedProductId}
+          />
+        </Tab.Panel>
       </Tab>
-
-      {activeTab === 'products' && (
-        <>
-          {isLoading && <ListRow contents={<ListRow.Texts type="1RowTypeA" top="로딩 중..." />} />}
-          {isError && (
-            <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품 목록을 불러오는 중 오류가 발생했습니다." />} />
-          )}
-          {!isLoading && !isError && filteredProducts.length === 0 && (
-            <ListRow contents={<ListRow.Texts type="1RowTypeA" top="조건에 맞는 상품이 없습니다." />} />
-          )}
-          {filteredProducts.map(product => (
-            <SavingsProductItem
-              key={product.id}
-              product={product}
-              selected={selectedProductId === product.id}
-              onClick={() => {
-                setSelectedProductId(product.id);
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {activeTab === 'results' && (
-        <CalculationResult
-          targetAmount={targetAmount}
-          monthlyAmount={monthlyAmount}
-          period={period}
-          selectedProduct={selectedProduct}
-          recommendedProducts={recommendedProducts}
-          selectedProductId={selectedProductId}
-          onProductSelect={setSelectedProductId}
-        />
-      )}
     </>
   );
 }
