@@ -1,13 +1,10 @@
-import { GlobalPortal, GlobalStyles } from 'tosslib';
-import { Routes } from './pages/Routes';
+import { Providers } from './app/providers';
+import { Routes } from './app/routers';
 
 export function App() {
   return (
-    <>
-      <GlobalStyles />
-      <GlobalPortal.Provider>
-        <Routes />
-      </GlobalPortal.Provider>
-    </>
+    <Providers>
+      <Routes />
+    </Providers>
   );
 }
