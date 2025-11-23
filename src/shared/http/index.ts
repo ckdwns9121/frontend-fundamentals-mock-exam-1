@@ -1,6 +1,6 @@
 import { http as tosslibHttp, isHttpError } from 'tosslib';
 
-const BASE_URL = 'http://localhost:517344';
+const BASE_URL = 'http://localhost:5173';
 
 /**
  * HTTP 클라이언트 인터페이스
