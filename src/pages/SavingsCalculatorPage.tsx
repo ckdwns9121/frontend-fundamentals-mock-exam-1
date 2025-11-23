@@ -1,31 +1,12 @@
 import { Border, colors, ListHeader, ListRow, NavigationBar, Spacing, Tab } from 'tosslib';
 import { SavingsProductItem } from '../entities/savings/ui/SavingsProductItem';
 import { SavingsForm } from '../features/savings/savings-form';
-import type { SavingsProduct } from '../entities/savings/model/types';
-
-// Mock 데이터 (나중에 API로 교체)
-const mockProducts: SavingsProduct[] = [
-  {
-    id: '1',
-    name: '기본 정기적금',
-    description: '기본 정기적금 상품',
-    interestRate: 3.2,
-    minAmount: 100000,
-    maxAmount: 500000,
-    period: 12,
-  },
-  {
-    id: '2',
-    name: '고급 정기적금',
-    description: '고급 정기적금 상품',
-    interestRate: 2.8,
-    minAmount: 50000,
-    maxAmount: 1000000,
-    period: 24,
-  },
-];
+import { useSavingsProducts } from '../entities/savings/api';
 
 export function SavingsCalculatorPage() {
+  const { data: products = [], isLoading, isError } = useSavingsProducts();
+
+  console.log(products);
   const selectedProductId: string | null = null; // TODO: 상태 관리로 교체
   const targetAmount = ''; // TODO: 상태 관리로 교체
   const monthlyAmount = ''; // TODO: 상태 관리로 교체
@@ -65,7 +46,14 @@ export function SavingsCalculatorPage() {
         </Tab.Item>
       </Tab>
 
-      {mockProducts.map(product => (
+      {isLoading && <ListRow contents={<ListRow.Texts type="1RowTypeA" top="로딩 중..." />} />}
+      {isError && (
+        <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품 목록을 불러오는 중 오류가 발생했습니다." />} />
+      )}
+      {!isLoading && !isError && products.length === 0 && (
+        <ListRow contents={<ListRow.Texts type="1RowTypeA" top="등록된 상품이 없습니다." />} />
+      )}
+      {products.map(product => (
         <SavingsProductItem
           key={product.id}
           product={product}
@@ -120,7 +108,7 @@ export function SavingsCalculatorPage() {
       <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
       <Spacing size={12} />
 
-      {mockProducts.map(product => (
+      {products.map(product => (
         <SavingsProductItem
           key={product.id}
           product={product}

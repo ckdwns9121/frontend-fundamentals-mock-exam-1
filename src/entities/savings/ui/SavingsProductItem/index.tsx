@@ -12,7 +12,10 @@ interface SavingsProductItemProps {
  * @param amount 금액
  * @returns 포맷팅된 금액 문자열
  */
-function formatAmount(amount: number): string {
+function formatAmount(amount: number | undefined | null): string {
+  if (amount == null || isNaN(amount)) {
+    return '0';
+  }
   return amount.toLocaleString('ko-KR');
 }
 
@@ -21,7 +24,7 @@ function formatAmount(amount: number): string {
  * @description 적금 상품 정보를 표시하는 리스트 아이템입니다.
  */
 export function SavingsProductItem({ product, selected = false, onClick }: SavingsProductItemProps) {
-  const { name, interestRate, minAmount, maxAmount, period } = product;
+  const { name, annualRate, minMonthlyAmount, maxMonthlyAmount, availableTerms } = product;
 
   return (
     <ListRow
@@ -30,9 +33,9 @@ export function SavingsProductItem({ product, selected = false, onClick }: Savin
           type="3RowTypeA"
           top={name}
           topProps={{ fontSize: 16, fontWeight: 'bold', color: colors.grey900 }}
-          middle={`연 이자율: ${interestRate}%`}
+          middle={`연 이자율: ${annualRate}%`}
           middleProps={{ fontSize: 14, color: colors.blue600, fontWeight: 'medium' }}
-          bottom={`${formatAmount(minAmount)}원 ~ ${formatAmount(maxAmount)}원 | ${period}개월`}
+          bottom={`${formatAmount(minMonthlyAmount)}원 ~ ${formatAmount(maxMonthlyAmount)}원 | ${availableTerms}개월`}
           bottomProps={{ fontSize: 13, color: colors.grey600 }}
         />
       }
