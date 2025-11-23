@@ -1,6 +1,6 @@
-import { http as tosslibHttp } from 'tosslib';
+import { http as tosslibHttp, isHttpError } from 'tosslib';
 
-const BASE_URL = 'http://localhost:5173';
+const BASE_URL = 'http://localhost:517344';
 
 /**
  * HTTP 클라이언트 인터페이스
@@ -23,23 +23,36 @@ class TosslibHttpAdapter implements HttpClient {
   constructor(private readonly http: typeof tosslibHttp) {}
 
   async get<T>(url: string): Promise<T> {
-    return this.http.get<T>(url);
+    return this.handleRequest(() => this.http.get<T>(url));
   }
 
   async post<T>(url: string, data: unknown): Promise<T> {
-    return this.http.post<T>(url, { json: data });
+    return this.handleRequest(() => this.http.post<T>(url, { json: data }));
   }
 
   async put<T>(url: string, data: unknown): Promise<T> {
-    return this.http.put<T>(url, { json: data });
+    return this.handleRequest(() => this.http.put<T>(url, { json: data }));
   }
 
   async delete<T>(url: string): Promise<T> {
-    return this.http.delete<T>(url);
+    return this.handleRequest(() => this.http.delete<T>(url));
   }
 
   async patch<T>(url: string, data: unknown): Promise<T> {
-    return this.http.patch<T>(url, { json: data });
+    return this.handleRequest(() => this.http.patch<T>(url, { json: data }));
+  }
+
+  private async handleRequest<T>(request: () => Promise<T>): Promise<T> {
+    try {
+      return await request();
+    } catch (error) {
+      if (isHttpError(error)) {
+        // HTTP 에러인 경우 에러 정보를 포함하여 재throw
+        throw error;
+      }
+      // 기타 에러인 경우 그대로 재throw
+      throw error;
+    }
   }
 }
 
