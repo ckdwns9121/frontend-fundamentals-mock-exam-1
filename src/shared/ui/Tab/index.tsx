@@ -108,6 +108,7 @@ function TabTrigger({ children, value, disabled = false }: TabTriggerProps) {
       disabled={disabled}
       onClick={() => !disabled && onChange(value)}
       css={css`
+        flex: 1;
         padding: 12px 16px;
         border: none;
         background: transparent;
