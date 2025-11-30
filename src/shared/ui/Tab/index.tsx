@@ -3,8 +3,8 @@ import { css } from '@emotion/react';
 import { colors } from 'tosslib';
 
 interface TabContextValue {
-  activeValue: string;
-  onChange: (value: string) => void;
+  activeValue: Tab;
+  onChange: (value: Tab) => void;
 }
 
 const TabContext = createContext<TabContextValue | null>(null);
@@ -17,11 +17,13 @@ function useTabContext() {
   return context;
 }
 
+type Tab = 'products' | 'results';
+
 interface TabProps {
   children: ReactNode;
-  defaultValue?: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  defaultValue?: Tab;
+  value?: Tab;
+  onChange?: (value: Tab) => void;
 }
 
 /**
@@ -42,12 +44,12 @@ interface TabProps {
  * ```
  */
 export function Tab({ children, defaultValue, value: controlledValue, onChange: controlledOnChange }: TabProps) {
-  const [internalValue, setInternalValue] = useState(defaultValue || '');
+  const [internalValue, setInternalValue] = useState<Tab>(defaultValue || 'products');
 
   const isControlled = controlledValue !== undefined;
   const activeValue = isControlled ? controlledValue : internalValue;
 
-  const handleChange = (newValue: string) => {
+  const handleChange = (newValue: Tab) => {
     if (!isControlled) {
       setInternalValue(newValue);
     }
@@ -90,7 +92,7 @@ function TabList({ children }: TabListProps) {
 
 interface TabTriggerProps {
   children: ReactNode;
-  value: string;
+  value: Tab;
   disabled?: boolean;
 }
 

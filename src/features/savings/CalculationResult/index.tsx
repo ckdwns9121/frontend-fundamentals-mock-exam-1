@@ -1,8 +1,8 @@
 import { Border, colors, ListHeader, ListRow, Spacing } from 'tosslib';
-import { SavingsProductItem } from '../../../entities/savings/ui/SavingsProductItem';
 import { calculateDifference, calculateExpectedAmount, calculateRecommendedMonthlyAmount } from '../lib/calculations';
+import type { SavingsProduct } from 'entities/savings/model/types';
+import { SavingsProductItem } from 'entities/savings/ui/SavingsProductItem/SavingProductItem';
 import { formatAmount } from 'shared/lib/format';
-import type { SavingsProduct } from '../../../entities/savings/model/types';
 
 interface CalculationResultProps {
   targetAmount: string;
